@@ -3,7 +3,7 @@
 ================================ */
 :root {
   --bg: #0b0b0b;
-  --bg-img: url("/pic/background.png");
+  --bg-img: url("pic/background.png");
   --panel: #111217;
   --accent: #e33b31;
   --muted: #9aa0a6;
