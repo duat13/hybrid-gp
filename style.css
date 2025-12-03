@@ -1,186 +1,217 @@
-/* Basisfarben / F1-angelehnt, nicht komplett schwarz */
-:root{
+/* ================================
+   Grundfarben – F1 Dark Theme
+================================ */
+:root {
   --bg: #0b0b0b;
+  --bg-img: url("/pic/background.png");
   --panel: #111217;
-  --accent: #e33b31; /* Racing-rot */
+  --accent: #e33b31;
   --muted: #9aa0a6;
   --text: #eaeaea;
 }
 
-/* Reset / Basis */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg,#070708 0%, #0b0b0b 100%);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+/* ================================
+   Reset & Body
+================================ */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg) fixed center/cover no-repeat;
+  background-image: var(--bg-img);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Container zentriert */
-.container{
+/* Hintergrund abdunkeln für bessere Lesbarkeit */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(2px);
+  z-index: -1;
+}
+
+/* ================================
+   Container
+================================ */
+.container {
   width: calc(100% - 32px);
   max-width: 1100px;
   margin: 0 auto;
 }
 
-/* Header / Nav */
-.site-header{
+/* ================================
+   Header & Navigation
+================================ */
+.site-header {
   border-bottom: 2px solid rgba(255,255,255,0.04);
-  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
 }
-.header-inner{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 18px 0;
 }
-.logo{
-  font-weight:800;
-  font-size:20px;
-  color:var(--accent);
-  letter-spacing:1px;
-}
-.nav-links{
-  list-style:none;
-  margin:0;
-  padding:0;
-  display:flex;
-  gap:16px;
-}
-.nav-links li{display:inline-block}
-.nav-links a{
-  color:var(--muted);
-  text-decoration:none;
-  font-weight:600;
-  padding:8px 10px;
-  border-radius:6px;
-}
-.nav-links a:hover{ color: #fff; background: rgba(255,255,255,0.03) }
-.nav-links a.active{
-  color: #fff;
-  background: linear-gradient(90deg, rgba(227,59,49,0.12), rgba(227,59,49,0.06));
-  border: 1px solid rgba(227,59,49,0.12);
+
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--accent);
+  letter-spacing: 1px;
 }
 
-/* Main Content */
-.content{
+.nav-links {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 16px;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.nav-links a:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
+.nav-links a.active {
+  color: #fff;
+  background: rgba(227,59,49,0.2);
+  border: 1px solid rgba(227,59,49,0.25);
+}
+
+/* ================================
+   Main Content
+================================ */
+.content {
   padding: 28px 0 60px 0;
 }
-h1{
-  margin: 0 0 18px 0;
-  font-size:28px;
-  text-align:center;
-  color:var(--text);
-}
-.season-block{ margin: 26px 0; }
-.season-block h2{
-  font-size:18px;
-  margin: 0 0 12px 0;
-  color: var(--muted);
+
+h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 18px;
 }
 
-/* Table styling */
-.table-wrap{ overflow:auto; border-radius:8px; }
-.race-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:520px; /* allows horizontal scroll on small screens */
+.season-block {
+  margin: 26px 0;
+}
+
+.season-block h2 {
+  color: var(--muted);
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+/* ================================
+   Tabellen (Race Tables)
+================================ */
+.table-wrap {
+  overflow: auto;
+  border-radius: 8px;
+}
+
+.race-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
   background: var(--panel);
   box-shadow: 0 6px 18px rgba(0,0,0,0.45);
 }
-.race-table thead th{
-  text-align:center;
-  padding:12px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  color:var(--muted);
-  font-weight:700;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.race-table tbody td{
-  padding:14px 12px;
-  text-align:center;
-  border-bottom:1px solid rgba(255,255,255,0.03);
-  vertical-align:middle;
-  color:var(--text);
-  font-size:15px;
-}
-.race-table tbody tr:nth-child(even){ background: rgba(255,255,255,0.01) }
-.race-table tbody tr:hover{ background: rgba(255,255,255,0.03) }
 
-/* make first column (numbers) narrower */
-.race-table tbody td:first-child, .race-table thead th:first-child{
-  width:72px;
-  font-weight:700;
-  color:var(--accent);
+.race-table thead th {
+  padding: 12px;
+  color: var(--muted);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.05);
 }
 
-/* Footer */
-.site-footer{
-  border-top:1px solid rgba(255,255,255,0.03);
-  padding:18px 0;
-  text-align:center;
-  color:var(--muted);
-  font-size:13px;
+.race-table tbody td {
+  padding: 14px 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Responsive tweaks */
-@media (max-width:700px){
-  .header-inner{ flex-direction:column; gap:8px; align-items:flex-start; padding-bottom:12px }
-  .nav-links{ gap:8px; flex-wrap:wrap }
-  h1{ font-size:20px }
-  .race-table{ min-width:480px }
-}
-body {
-  background: #111;
-  color: #eee;
-  font-family: Arial, sans-serif;
+.race-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
 }
 
-/* HERO */
+.race-table tbody tr:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.race-table thead th:first-child,
+.race-table td:first-child {
+  width: 72px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ================================
+   HERO Banner
+================================ */
 .hero {
-  background: url('hero.jpg') center/cover no-repeat;
   height: 300px;
+  background: url('/pic/hero.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .hero-content {
   text-align: center;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.55);
   padding: 20px 40px;
   border-radius: 12px;
 }
+
 .hero h1 {
   font-size: 40px;
   text-transform: uppercase;
-  letter-spacing: 2px;
-}
-.hero p {
-  font-size: 18px;
-  margin-top: 10px;
 }
 
-/* Nächstes Rennen */
+.hero p {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+/* ================================
+   Nächstes Rennen Box
+================================ */
 .next-race {
   margin: 40px auto;
   text-align: center;
 }
+
 .race-box {
+  display: inline-block;
   background: #222;
   padding: 15px;
-  border-left: 5px solid #e10600;
-  display: inline-block;
+  border-left: 5px solid var(--accent);
   border-radius: 6px;
 }
 
-/* Fahrer Grid */
+/* ================================
+   Fahrer Grid
+================================ */
 .drivers {
   text-align: center;
-  margin: 40px auto;
+  margin-top: 40px;
 }
+
 .driver-grid {
   display: grid;
   grid-template-columns: repeat(4,1fr);
@@ -188,75 +219,98 @@ body {
   max-width: 800px;
   margin: auto;
 }
+
 .driver-card {
   background: #222;
   padding: 20px;
   border-radius: 10px;
   transition: 0.2s;
 }
+
 .driver-card:hover {
-  background: #e10600;
+  background: var(--accent);
   transform: translateY(-4px);
-  cursor: pointer;
 }
 
-/* Footer */
-footer {
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-  background: #000;
-  border-top: 1px solid #333;
-}
-
-/* Auth Pages */
+/* ================================
+   Auth Pages (Login + Register)
+================================ */
 .auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
 }
 
 .card {
-    background: #1a1a1a;
-    padding: 24px;
-    border-radius: 12px;
-    width: 300px;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
-    text-align: center;
+  background: #1a1a1a;
+  padding: 24px;
+  border-radius: 12px;
+  width: 300px;
+  box-shadow: 0 0 15px rgba(255,0,0,0.25);
+  text-align: center;
 }
 
 .card input {
-    width: 100%;
-    margin: 8px 0;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #333;
-    background: #0d0d0d;
-    color: #fff;
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #fff;
 }
 
 .card button {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    background: #e10600;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .card button:hover {
-    background: #ff1a14;
-}
-
-.card.hidden {
-    display: none;
+  background: #ff1a14;
 }
 
 .switch a {
-    color: #ff1a14;
-    cursor: pointer;
+  color: #ff1a14;
+  cursor: pointer;
 }
 
+/* ================================
+   Footer
+================================ */
+.site-footer {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 18px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ================================
+   Responsive
+================================ */
+@media (max-width: 700px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 12px;
+  }
+
+  .driver-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .race-table {
+    min-width: 480px;
+  }
+}

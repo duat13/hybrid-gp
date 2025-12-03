@@ -5,29 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login – Hybrid GP Series</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <header class="site-header">
+<header class="site-header">
     <div class="container header-inner">
-      <div class="logo">Hybrid GP</div>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="index.html">Startseite</a></li>
-          <li><a href="calendar.html">Rennkalender</a></li>
-          <li><a href="login.html" class="active">Login</a></li>
-        </ul>
-      </nav>
+        <div class="logo">Hybrid GP</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Startseite</a></li>
+                <li><a href="calendar.html">Rennkalender</a></li>
+                <li><a href="login.html" class="active">Login</a></li>
+            </ul>
+        </nav>
     </div>
-  </header>
+</header>
+
 <main class="auth-container">
 
+    <!-- LOGIN -->
     <div class="card">
-        <h2>Login</h2>
-        <input type="email" id="email" placeholder="E-Mail">
-        <input type="password" id="password" placeholder="Passwort">
-        <button id="loginBtn">Einloggen</button>
+        <form id="login-form">
+            <h2>Login</h2>
+            <input type="email" id="email" placeholder="E-Mail">
+            <input type="password" id="password" placeholder="Passwort">
+            <button type="submit">Einloggen</button>
+        </form>
 
         <p class="switch">
             Noch kein Konto?
@@ -35,56 +39,11 @@
         </p>
     </div>
 
-    <div class="card hidden" id="register-card">
-        <h2>Registrieren</h2>
-        <input type="email" id="reg-email" placeholder="E-Mail">
-        <input type="password" id="reg-password" placeholder="Passwort (min. 6 Zeichen)">
-        <button id="registerBtn">Registrieren</button>
-        <p class="switch">
-            Bereits ein Konto?
-            <a href="#" id="show-login">Hier einloggen</a>
-        </p>
-    </div>
-
 </main>
 
-<script type="module">
-    const supabase = window.supabase.createClient(
-        "https://hyirfgqusqmkhlpqiyyt.supabase.co",
-        "public-anon-key"
-    );
-
-    const loginCard = document.querySelector(".card");
-    const regCard = document.getElementById("register-card");
-
-    document.getElementById("show-register").addEventListener("click", () => {
-        loginCard.classList.add("hidden");
-        regCard.classList.remove("hidden");
-    });
-
-    document.getElementById("show-login").addEventListener("click", () => {
-        regCard.classList.add("hidden");
-        loginCard.classList.remove("hidden");
-    });
-
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) alert(error.message);
-        else window.location.href = "index.html";
-    });
-
-    document.getElementById("registerBtn").addEventListener("click", async () => {
-        const email = document.getElementById("reg-email").value;
-        const password = document.getElementById("reg-password").value;
-
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (error) alert(error.message);
-        else alert("Konto erstellt! Bitte E-Mail checken & Login versuchen.");
-    });
-</script>
+<!-- MUSS GANZ UNTEN sein -->
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
 
 </body>
 </html>

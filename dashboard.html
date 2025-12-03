@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – Hybrid GP</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">Hybrid GP</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Startseite</a></li>
+          <li><a href="calendar.html">Rennkalender</a></li>
+          <li><a href="standings.html">Punktetabelle</a></li>
+          <li><a href="dashboard.html" class="active">Mein Dashboard</a></li>
+          <li><a href="#" id="logoutBtn">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <h1>Mein Rennkalender</h1>
+    <p>Hier kannst du deine Events einsehen, Infos ergänzen oder ein Rennen absagen.</p>
+
+    <div id="events-container" class="event-list">
+        <p>Lade deine Events...</p>
+    </div>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+
+    // Prüfen ob User eingeloggt ist
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Alle Events laden
+    const { data: events, error } = await supabase
+        .from("events")
+        .select("*")
+        .order("date", { ascending: true });
+
+    if (error) {
+        document.getElementById("events-container").innerHTML =
+            "<p>Fehler beim Laden der Events.</p>";
+        return;
+    }
+
+    const container = document.getElementById("events-container");
+    container.innerHTML = "";
+
+    events.forEach(event => {
+        const div = document.createElement("div");
+        div.classList.add("event-card");
+
+        div.innerHTML = `
+            <h3>${event.title}</h3>
+            <p><strong>Datum:</strong> ${event.date}</p>
+            <p><strong>Ort:</strong> ${event.location}</p>
+
+            <div class="event-actions">
+                <a class="button" href="event-details.html?event_id=${event.id}">
+                    Event bearbeiten
+                </a>
+
+                <button class="button decline-btn" data-event="${event.id}">
+                    Absagen
+                </button>
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+
+    // Absage-Buttons verbinden
+    document.querySelectorAll(".decline-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+            const eventId = btn.dataset.event;
+
+            const { error } = await supabase
+                .from("event_attendance")
+                .upsert({
+                    user_id: user.id,
+                    event_id: eventId,
+                    status: "declined"
+                });
+
+            if (error) {
+                alert("Fehler beim Absagen.");
+            } else {
+                alert("Du hast dieses Event abgesagt.");
+            }
+        });
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+        await supabase.auth.signOut();
+        window.location.href = "index.html";
+    });
+
+});
+</script>
+
+</body>
+</html>
