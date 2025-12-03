@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hybrid GP — Punktetabelle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">Hybrid GP</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Startseite</a></li>
+          <li><a href="calendar.html">Rennkalender</a></li>
+          <li><a href="standings.html" class="active">Punktetabelle</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container content">
+    <h1>Punktetabelle</h1>
+    <p class="lead">Gesamtscore aller Fahrer — automatisch aus den Rennergebnissen berechnet.</p>
+
+    <!-- Legend / Punkteübersicht -->
+    <section class="points-legend">
+      <h2>Punkte pro Platz (Legende)</h2>
+      <div class="legend-grid">
+        <div class="legend-item"><strong>1.</strong><span class="points">25</span></div>
+        <div class="legend-item"><strong>2.</strong><span class="points">18</span></div>
+        <div class="legend-item"><strong>3.</strong><span class="points">15</span></div>
+        <div class="legend-item"><strong>4.</strong><span class="points">12</span></div>
+      </div>
+    </section>
+
+    <!-- Standings Table -->
+    <section style="margin-top:22px">
+      <table class="standings" id="standings-table">
+        <thead>
+          <tr>
+            <th>Rang</th>
+            <th>Fahrer</th>
+            <th>Punkte</th>
+            <th>Siege</th>
+            <th>Anzahl Rennen</th>
+          </tr>
+        </thead>
+        <tbody id="standings-body">
+          <tr><td colspan="5">Lade Daten…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <p style="margin-top:18px;color:var(--muted);font-size:0.95rem">
+      Hinweis: Die Tabelle wird automatisch aus der Tabelle <code>results</code> in Supabase berechnet.
+      Pro Rennplatz werden Punkte gemäß der obenstehenden Legende vergeben.
+    </p>
+  </main>
+
+  <!-- Supabase client wird in deiner repo-Datei supabase.js initialisiert -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+
+  <script>
+  (async () => {
+    // Versuche verschiedene möglichen globalen Supabase-Clients (kompatibel mit deinem setup)
+    const sb = window.supabaseClient || window.supabase || (window.supabase = window.supabase || null);
+    if (!sb || !sb.from) {
+      console.error("Supabase-Client nicht gefunden. Bitte supabase.js prüfen.");
+      document.getElementById('standings-body').innerHTML = '<tr><td colspan="5">Fehler: Supabase nicht initialisiert.</td></tr>';
+      return;
+    }
+
+    // Punkte-Mapping: Platz -> Punkte (anpassbar)
+    const POINTS = {
+      1: 25,
+      2: 18,
+      3: 15,
+      4: 12
+    };
+
+    // Versuche zuerst, Ergebnisse aus der Tabelle 'results' zu laden.
+    // Erwartetes Schema (results): id, event_id, driver (text), position (int)
+    const { data: results, error } = await sb
+      .from('results')
+      .select('id,event_id,driver,position')
+      .order('event_id', { ascending: true });
+
+    if (error) {
+      console.error("Fehler beim Lesen der results-Tabelle:", error);
+      document.getElementById('standings-body').innerHTML = '<tr><td colspan="5">Fehler beim Laden der Ergebnisse.</td></tr>';
+      return;
+    }
+
+    if (!results || !results.length) {
+      document.getElementById('standings-body').innerHTML = '<tr><td colspan="5">Keine Ergebnisse vorhanden.</td></tr>';
+      return;
+    }
+
+    // Aggregation: Punkte pro Fahrer berechnen, Anzahl Rennen, Siege zählen
+    const stats = {}; // driver -> { points, races, wins }
+    results.forEach(r => {
+      const driver = r.driver || 'Unbekannt';
+      const pos = Number(r.position) || 0;
+      const add = POINTS[pos] || 0;
+
+      if (!stats[driver]) stats[driver] = { points: 0, races: 0, wins: 0 };
+
+      stats[driver].points += add;
+      stats[driver].races += 1;
+      if (pos === 1) stats[driver].wins += 1;
+    });
+
+    // Konvertiere in Array und sortiere nach Punkten desc, bei Gleichstand nach mehr Siegen
+    const rows = Object.keys(stats).map(name => ({
+      driver: name,
+      points: stats[name].points,
+      races: stats[name].races,
+      wins: stats[name].wins
+    }));
+
+    rows.sort((a,b) => {
+      if (b.points !== a.points) return b.points - a.points;
+      // bei Gleichstand nach Siegen
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      return a.driver.localeCompare(b.driver);
+    });
+
+    // Render Tabelle
+    const tbody = document.getElementById('standings-body');
+    tbody.innerHTML = '';
+    rows.forEach((r, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${escapeHtml(r.driver)}</td>
+        <td>${r.points}</td>
+        <td>${r.wins}</td>
+        <td>${r.races}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Hilfsfunktion: XSS-sicheres Einfügen
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  })();
+  </script>
+</body>
+</html>
