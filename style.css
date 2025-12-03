@@ -1,0 +1,210 @@
+/* Basisfarben / F1-angelehnt, nicht komplett schwarz */
+:root{
+  --bg: #0b0b0b;
+  --panel: #111217;
+  --accent: #e33b31; /* Racing-rot */
+  --muted: #9aa0a6;
+  --text: #eaeaea;
+}
+
+/* Reset / Basis */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg,#070708 0%, #0b0b0b 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Container zentriert */
+.container{
+  width: calc(100% - 32px);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Header / Nav */
+.site-header{
+  border-bottom: 2px solid rgba(255,255,255,0.04);
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+}
+.header-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 18px 0;
+}
+.logo{
+  font-weight:800;
+  font-size:20px;
+  color:var(--accent);
+  letter-spacing:1px;
+}
+.nav-links{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  gap:16px;
+}
+.nav-links li{display:inline-block}
+.nav-links a{
+  color:var(--muted);
+  text-decoration:none;
+  font-weight:600;
+  padding:8px 10px;
+  border-radius:6px;
+}
+.nav-links a:hover{ color: #fff; background: rgba(255,255,255,0.03) }
+.nav-links a.active{
+  color: #fff;
+  background: linear-gradient(90deg, rgba(227,59,49,0.12), rgba(227,59,49,0.06));
+  border: 1px solid rgba(227,59,49,0.12);
+}
+
+/* Main Content */
+.content{
+  padding: 28px 0 60px 0;
+}
+h1{
+  margin: 0 0 18px 0;
+  font-size:28px;
+  text-align:center;
+  color:var(--text);
+}
+.season-block{ margin: 26px 0; }
+.season-block h2{
+  font-size:18px;
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+
+/* Table styling */
+.table-wrap{ overflow:auto; border-radius:8px; }
+.race-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:520px; /* allows horizontal scroll on small screens */
+  background: var(--panel);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+.race-table thead th{
+  text-align:center;
+  padding:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  color:var(--muted);
+  font-weight:700;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.race-table tbody td{
+  padding:14px 12px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  vertical-align:middle;
+  color:var(--text);
+  font-size:15px;
+}
+.race-table tbody tr:nth-child(even){ background: rgba(255,255,255,0.01) }
+.race-table tbody tr:hover{ background: rgba(255,255,255,0.03) }
+
+/* make first column (numbers) narrower */
+.race-table tbody td:first-child, .race-table thead th:first-child{
+  width:72px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+/* Footer */
+.site-footer{
+  border-top:1px solid rgba(255,255,255,0.03);
+  padding:18px 0;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* Responsive tweaks */
+@media (max-width:700px){
+  .header-inner{ flex-direction:column; gap:8px; align-items:flex-start; padding-bottom:12px }
+  .nav-links{ gap:8px; flex-wrap:wrap }
+  h1{ font-size:20px }
+  .race-table{ min-width:480px }
+}
+body {
+  background: #111;
+  color: #eee;
+  font-family: Arial, sans-serif;
+}
+
+/* HERO */
+.hero {
+  background: url('hero.jpg') center/cover no-repeat;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-content {
+  text-align: center;
+  background: rgba(0,0,0,0.5);
+  padding: 20px 40px;
+  border-radius: 12px;
+}
+.hero h1 {
+  font-size: 40px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.hero p {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+/* Nächstes Rennen */
+.next-race {
+  margin: 40px auto;
+  text-align: center;
+}
+.race-box {
+  background: #222;
+  padding: 15px;
+  border-left: 5px solid #e10600;
+  display: inline-block;
+  border-radius: 6px;
+}
+
+/* Fahrer Grid */
+.drivers {
+  text-align: center;
+  margin: 40px auto;
+}
+.driver-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 15px;
+  max-width: 800px;
+  margin: auto;
+}
+.driver-card {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+.driver-card:hover {
+  background: #e10600;
+  transform: translateY(-4px);
+  cursor: pointer;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  background: #000;
+  border-top: 1px solid #333;
+}
